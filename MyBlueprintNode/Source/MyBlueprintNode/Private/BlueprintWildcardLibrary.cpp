@@ -7,17 +7,22 @@ void UBlueprintWildcardLibrary::Generic_ShowStructFields(const void* StructAddr,
 	UScriptStruct* Struct = StructProperty->Struct;
 	for (TFieldIterator<UProperty> iter(Struct); iter; ++iter) {
 
-		FScreenMessageString NewMessage;
-		NewMessage.CurrentTimeDisplayed = 0.0f;
-		NewMessage.Key = INDEX_NONE;
-		NewMessage.DisplayColor = FColor::Blue;
-		NewMessage.TimeToDisplay = 5;
-		NewMessage.ScreenMessage = FString::Printf(TEXT("Property: [%s].[%s]"),
+		//FScreenMessageString NewMessage;
+		//NewMessage.CurrentTimeDisplayed = 0.0f;
+		//NewMessage.Key = INDEX_NONE;
+		//NewMessage.DisplayColor = FColor::Blue;
+		//NewMessage.TimeToDisplay = 5;
+		//NewMessage.ScreenMessage = FString::Printf(TEXT("Property: [%s].[%s]"),
+		//	*(Struct->GetName()),
+		//	*(iter->GetName())
+		//);
+		//NewMessage.TextScale = FVector2D::UnitVector;
+		//GEngine->PriorityScreenMessages.Insert(NewMessage, 0);
+		FString ScreenMessage = FString::Printf(TEXT("Property: [%s].[%s]"),
 			*(Struct->GetName()),
 			*(iter->GetName())
 		);
-		NewMessage.TextScale = FVector2D::UnitVector;
-		GEngine->PriorityScreenMessages.Insert(NewMessage, 0);
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5, FColor::Blue, ScreenMessage);
 	}
 }
 

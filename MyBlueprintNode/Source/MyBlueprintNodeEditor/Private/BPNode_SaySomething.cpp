@@ -2,6 +2,7 @@
 #include "BPNode_SaySomething.h"
 #include "SGraphNodeSaySomething.h"
 
+#include "ToolMenus.h" // for UToolMenu
 #include "BlueprintNodeSpawner.h"	// BlueprintGraph
 #include "BlueprintActionDatabaseRegistrar.h"	// BlueprintGraph
 #include "EdGraphSchema_K2.h"	// BlueprintGraph
@@ -12,8 +13,9 @@
 #include "ScopedTransaction.h"
 #include "Framework/MultiBox/MultiBoxBuilder.h"
 #include "Kismet2/BlueprintEditorUtils.h"
-
 #include "MyBlueprintFunctionLibrary.h"	// MyBlueprintNode
+
+#define LOCTEXT_NAMESPACE "K2Node"
 
 void UBPNode_SaySomething::AllocateDefaultPins() {
 
@@ -25,31 +27,26 @@ void UBPNode_SaySomething::AllocateDefaultPins() {
 	}
 }
 
-void UBPNode_SaySomething::GetContextMenuActions(const FGraphNodeContextMenuBuilder & Context) const
+void UBPNode_SaySomething::GetNodeContextMenuActions(UToolMenu* Menu, UGraphNodeContextMenuContext* Context) const
 {
-	Super::GetContextMenuActions(Context);
+	Super::GetNodeContextMenuActions(Menu, Context);
 
-	if (Context.bIsDebugging)
+	if (Context->bIsDebugging)
 		return;
 
-	Context.MenuBuilder->BeginSection("UBPNode_SaySomething", FText::FromString(TEXT("Say Something")));
+	static FName CommutativeAssociativeBinaryOperatorNodeName = FName("UBPNode_SaySomething");
+	FText CommutativeAssociativeBinaryOperatorStr = LOCTEXT("UBPNode_SaySomething", "Say Something");
 
-	if (Context.Pin != nullptr)
-	{
-		if (Context.Pin->Direction == EGPD_Input && Context.Pin->ParentPin == nullptr)
-		{
-			Context.MenuBuilder->AddMenuEntry(
-				FText::FromString(TEXT("Remove Word")),
-				FText::FromString(TEXT("Remove Word from input")),
-				FSlateIcon(),
-				FUIAction(
-					FExecuteAction::CreateUObject(this, &UBPNode_SaySomething::RemoveInputPin, const_cast<UEdGraphPin*>(Context.Pin))
-				)
-			);
-		}
-	}// end of if
-
-	Context.MenuBuilder->EndSection();
+	FToolMenuSection& Section = Menu->AddSection(CommutativeAssociativeBinaryOperatorNodeName, CommutativeAssociativeBinaryOperatorStr);
+	Section.AddMenuEntry(
+		"RemovePin",
+		LOCTEXT("RemovePin", "Remove pin"),
+		LOCTEXT("RemovePinTooltip", "Remove this input pin"),
+		FSlateIcon(),
+		FUIAction(
+			FExecuteAction::CreateUObject(const_cast<UBPNode_SaySomething*>(this), &UBPNode_SaySomething::RemoveInputPin, const_cast<UEdGraphPin*>(Context->Pin))
+		)
+	);
 }
 
 void UBPNode_SaySomething::GetMenuActions(FBlueprintActionDatabaseRegistrar& ActionRegistrar) const {
@@ -140,7 +137,7 @@ void UBPNode_SaySomething::AddPinToNode()
 	CreatePin(EGPD_Input, UEdGraphSchema_K2::PC_String, NewPinName);
 }
 
-void UBPNode_SaySomething::RemoveInputPin(UEdGraphPin * Pin)
+void UBPNode_SaySomething::RemoveInputPin(UEdGraphPin* Pin)
 {
 	FScopedTransaction Transaction(FText::FromString("SaySomething_RemoveInputPin"));
 	Modify();

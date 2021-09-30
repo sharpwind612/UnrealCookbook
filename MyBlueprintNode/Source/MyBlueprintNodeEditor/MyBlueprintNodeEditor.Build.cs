@@ -7,8 +7,10 @@ public class MyBlueprintNodeEditor : ModuleRules
 	public MyBlueprintNodeEditor(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+
+        OverridePackageType = PackageOverrideType.EngineDeveloper;
+
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
 
         PrivateDependencyModuleNames.AddRange(new string[] {
             "UnrealEd",
@@ -18,7 +20,8 @@ public class MyBlueprintNodeEditor : ModuleRules
             "GraphEditor",
             "BlueprintGraph",
             "KismetCompiler",
-            "MyBlueprintNode"
+            "MyBlueprintNode",
+            "ToolMenus",
         });
 
     }
