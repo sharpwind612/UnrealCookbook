@@ -20,4 +20,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
 		static void SaySomething_Internal(const TArray<FString>& InWords);
+
+	UFUNCTION(BlueprintCallable, Category = "MyFunction")
+		static bool DeleteFile(const FString& path);
 };

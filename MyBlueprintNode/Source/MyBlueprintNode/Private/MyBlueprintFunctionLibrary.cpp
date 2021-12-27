@@ -32,3 +32,10 @@ void UMyBlueprintFunctionLibrary::SaySomething_Internal(const TArray<FString>& I
 		);
 	}
 }
+
+bool UMyBlueprintFunctionLibrary::DeleteFile(const FString& path)
+{
+	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+	bool result = PlatformFile.DeleteFile(*path);
+	return result;
+}
